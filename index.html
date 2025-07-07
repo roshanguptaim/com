@@ -7,17 +7,23 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Montserrat:wght@700&display=swap');
 
-    body {
+    html, body {
       margin: 0;
       padding: 0;
       font-family: 'Orbitron', sans-serif;
+      height: 100%;
+      width: 100%;
+    }
+
+    body {
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: 100vh;
       background: linear-gradient(to right, #e0f7ff, #a1c4fd);
       color: #000;
       transition: background 0.3s, color 0.3s;
+      overflow: hidden;
     }
 
     body.dark {
@@ -30,8 +36,12 @@
       border-radius: 30px;
       padding: 30px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-      width: 95%;
-      max-width: 900px;
+      width: 100%;
+      max-width: 1000px;
+      height: 90vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
       animation: fadeIn 1s ease-in-out;
     }
 
@@ -41,7 +51,8 @@
 
     .calculator {
       display: flex;
-      flex-wrap: wrap;
+      flex: 1;
+      overflow: hidden;
     }
 
     .history {
@@ -50,11 +61,15 @@
       margin-right: 15px;
       border-right: 2px solid #0288d1;
       padding-right: 10px;
+      overflow-y: auto;
     }
 
     .main {
       flex: 2;
       min-width: 250px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
 
     h1 {
@@ -141,7 +156,7 @@
     .history ul {
       list-style: none;
       padding-left: 0;
-      max-height: 300px;
+      max-height: 100%;
       overflow-y: auto;
     }
 
@@ -187,15 +202,12 @@
     }
 
     .adsense {
-      margin-top: 20px;
+      margin-top: 10px;
       text-align: center;
     }
   </style>
-
-  <!-- ✅ Google AdSense Script -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=YOUR-ADSENSE-CLIENT-ID" crossorigin="anonymous"></script>
 </head>
-
 <body>
   <audio id="clickSound" src="https://www.soundjay.com/buttons/button-29.mp3" preload="auto"></audio>
   <div class="wrapper">
@@ -206,35 +218,35 @@
         <div class="live-time" id="liveTimeText"></div>
       </div>
       <div class="main">
-        <h1>NASHOR</h1>
-        <div class="theme-toggle">
-          <button onclick="toggleTheme()"></button>
+        <div>
+          <h1>NASHOR</h1>
+          <div class="theme-toggle">
+            <button onclick="toggleTheme()"></button>
+          </div>
+          <input type="text" id="display" disabled />
+          <div class="buttons">
+            <button class="clear" onclick="clearDisplay(); playSound();">C</button>
+            <button onclick="press('7'); playSound();">7</button>
+            <button onclick="press('8'); playSound();">8</button>
+            <button onclick="press('9'); playSound();">9</button>
+            <button class="operator" onclick="press('/'); playSound();">÷</button>
+
+            <button onclick="press('4'); playSound();">4</button>
+            <button onclick="press('5'); playSound();">5</button>
+            <button onclick="press('6'); playSound();">6</button>
+            <button class="operator" onclick="press('*'); playSound();">×</button>
+
+            <button onclick="press('1'); playSound();">1</button>
+            <button onclick="press('2'); playSound();">2</button>
+            <button onclick="press('3'); playSound();">3</button>
+            <button class="operator" onclick="press('-'); playSound();">−</button>
+
+            <button onclick="press('0'); playSound();">0</button>
+            <button onclick="press('.'); playSound();">.</button>
+            <button class="equals" onclick="calculate(); playSound();">=</button>
+            <button class="operator" onclick="press('+'); playSound();">+</button>
+          </div>
         </div>
-        <input type="text" id="display" disabled />
-        <div class="buttons">
-          <button class="clear" onclick="clearDisplay(); playSound();">C</button>
-          <button onclick="press('7'); playSound();">7</button>
-          <button onclick="press('8'); playSound();">8</button>
-          <button onclick="press('9'); playSound();">9</button>
-          <button class="operator" onclick="press('/'); playSound();">÷</button>
-
-          <button onclick="press('4'); playSound();">4</button>
-          <button onclick="press('5'); playSound();">5</button>
-          <button onclick="press('6'); playSound();">6</button>
-          <button class="operator" onclick="press('*'); playSound();">×</button>
-
-          <button onclick="press('1'); playSound();">1</button>
-          <button onclick="press('2'); playSound();">2</button>
-          <button onclick="press('3'); playSound();">3</button>
-          <button class="operator" onclick="press('-'); playSound();">−</button>
-
-          <button onclick="press('0'); playSound();">0</button>
-          <button onclick="press('.'); playSound();">.</button>
-          <button class="equals" onclick="calculate(); playSound();">=</button>
-          <button class="operator" onclick="press('+'); playSound();">+</button>
-        </div>
-
-        <!-- ✅ AdSense Banner Ad -->
         <div class="adsense">
           <ins class="adsbygoogle"
                style="display:block"
@@ -246,7 +258,6 @@
       </div>
     </div>
   </div>
-
   <script>
     let expression = "";
     const historyList = document.getElementById("history-list");
@@ -304,8 +315,7 @@
     setInterval(updateTime, 1000);
     updateTime();
 
-    // ✅ Load AdSense
     (adsbygoogle = window.adsbygoogle || []).push({});
   </script>
-  </body>
-  </html>
+</body>
+</html>
