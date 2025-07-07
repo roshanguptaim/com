@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NASHOR</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Montserrat:wght@700&display=swap');
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Orbitron', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(to right, #e0f7ff, #a1c4fd);
+      color: #000;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    body.dark {
+      background: linear-gradient(to right, #1e1e1e, #434343);
+      color: #fff;
+    }
+
+    .wrapper {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 30px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      width: 95%;
+      max-width: 900px;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    body.dark .wrapper {
+      background: #2b2b2b;
+    }
+
+    .calculator {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .history {
+      flex: 1;
+      min-width: 180px;
+      margin-right: 15px;
+      border-right: 2px solid #0288d1;
+      padding-right: 10px;
+    }
+
+    .main {
+      flex: 2;
+      min-width: 250px;
+    }
+
+    h1 {
+      text-align: center;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 36px;
+      margin-bottom: 15px;
+      text-decoration: underline;
+    }
+
+    input {
+      width: 100%;
+      padding: 16px;
+      font-size: 24px;
+      text-align: right;
+      margin-bottom: 10px;
+      border: none;
+      border-radius: 10px;
+      background: #e1f5fe;
+      color: #000;
+      box-sizing: border-box;
+    }
+
+    body.dark input {
+      background: #444;
+      color: #fff;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    button {
+      padding: 20px;
+      font-size: 18px;
+      border: none;
+      border-radius: 12px;
+      color: #fff;
+      cursor: pointer;
+      transition: transform 0.2s ease-in-out;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+    }
+
+    button:nth-child(odd) { background: #42a5f5; }
+    button:nth-child(even) { background: #ffb74d; }
+
+    .operator { background: #ff7043; }
+    .equals { background: #09853d; grid-column: span 2; }
+    .clear { background: #a10d0b; }
+
+    .theme-toggle {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    .theme-toggle button {
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 14px;
+      background: #2a0e8f;
+      color: white;
+      border: none;
+    }
+
+    .theme-toggle button::after {
+      content: ' INKOO';
+      font-weight: bold;
+      text-decoration: underline;
+      margin-left: 10px;
+    }
+
+    .history h2 {
+      font-size: 18px;
+      color: #01579b;
+    }
+
+    body.dark .history h2 { color: #4fc3f7; }
+
+    .history ul {
+      list-style: none;
+      padding-left: 0;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .history li {
+      font-size: 14px;
+      margin-bottom: 6px;
+      color: #02b0bd;
+    }
+
+    body.dark .history li {
+      color: #81d4fa;
+    }
+
+    .live-time {
+      text-align: center;
+      font-weight: bold;
+      margin-top: 10px;
+      animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.02); opacity: 0.8; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    @media (max-width: 768px) {
+      .calculator {
+        flex-direction: column;
+      }
+      .history {
+        border-right: none;
+        border-bottom: 2px solid #0288d1;
+        margin-right: 0;
+        padding-right: 0;
+        margin-bottom: 15px;
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .adsense {
+      margin-top: 20px;
+      text-align: center;
+    }
+  </style>
+
+  <!-- ✅ Google AdSense Script -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=YOUR-ADSENSE-CLIENT-ID" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <audio id="clickSound" src="https://www.soundjay.com/buttons/button-29.mp3" preload="auto"></audio>
+  <div class="wrapper">
+    <div class="calculator">
+      <div class="history">
+        <h2>History</h2>
+        <ul id="history-list"></ul>
+        <div class="live-time" id="liveTimeText"></div>
+      </div>
+      <div class="main">
+        <h1>NASHOR</h1>
+        <div class="theme-toggle">
+          <button onclick="toggleTheme()"></button>
+        </div>
+        <input type="text" id="display" disabled />
+        <div class="buttons">
+          <button class="clear" onclick="clearDisplay(); playSound();">C</button>
+          <button onclick="press('7'); playSound();">7</button>
+          <button onclick="press('8'); playSound();">8</button>
+          <button onclick="press('9'); playSound();">9</button>
+          <button class="operator" onclick="press('/'); playSound();">÷</button>
+
+          <button onclick="press('4'); playSound();">4</button>
+          <button onclick="press('5'); playSound();">5</button>
+          <button onclick="press('6'); playSound();">6</button>
+          <button class="operator" onclick="press('*'); playSound();">×</button>
+
+          <button onclick="press('1'); playSound();">1</button>
+          <button onclick="press('2'); playSound();">2</button>
+          <button onclick="press('3'); playSound();">3</button>
+          <button class="operator" onclick="press('-'); playSound();">−</button>
+
+          <button onclick="press('0'); playSound();">0</button>
+          <button onclick="press('.'); playSound();">.</button>
+          <button class="equals" onclick="calculate(); playSound();">=</button>
+          <button class="operator" onclick="press('+'); playSound();">+</button>
+        </div>
+
+        <!-- ✅ AdSense Banner Ad -->
+        <div class="adsense">
+          <ins class="adsbygoogle"
+               style="display:block"
+               data-ad-client="ca-pub-7668929382028785"
+               data-ad-slot="6234948232"
+               data-ad-format="auto"
+               data-full-width-responsive="true"></ins>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let expression = "";
+    const historyList = document.getElementById("history-list");
+    const clickSound = document.getElementById("clickSound");
+
+    function playSound() {
+      clickSound.currentTime = 0;
+      clickSound.play();
+    }
+
+    function press(char) {
+      expression += char;
+      document.getElementById("display").value = expression;
+    }
+
+    function calculate() {
+      let result;
+      try {
+        result = eval(expression);
+        const now = new Date();
+        const timeNow = now.toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour12: true });
+        const dateNow = now.toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata' });
+        addToHistory(`${expression} = ${result} [${dateNow} ${timeNow}]`);
+        expression = result.toString();
+      } catch {
+        addToHistory(`${expression} = Error`);
+        expression = "";
+        result = "Error";
+      }
+      document.getElementById("display").value = result;
+    }
+
+    function clearDisplay() {
+      expression = "";
+      document.getElementById("display").value = "";
+    }
+
+    function addToHistory(entry) {
+      const li = document.createElement("li");
+      li.textContent = entry;
+      historyList.insertBefore(li, historyList.firstChild);
+    }
+
+    function toggleTheme() {
+      document.body.classList.toggle("dark");
+    }
+
+    function updateTime() {
+      const now = new Date();
+      const time = now.toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour12: true });
+      const date = now.toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata' });
+      document.getElementById("liveTimeText").textContent = `ALOKVIKASJIT: ${date} ${time}`;
+    }
+
+    setInterval(updateTime, 1000);
+    updateTime();
+
+    // ✅ Load AdSense
+    (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+  </body>
+  </html>
